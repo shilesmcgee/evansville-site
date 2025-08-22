@@ -1,0 +1,1 @@
+export default async ()=> new Response(JSON.stringify({items:[{title:'Firefighter headline'}]}),{headers:{'content-type':'application/json'}});
