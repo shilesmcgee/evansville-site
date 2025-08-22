@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Police Officer — Marc Schiele</title>
+  <meta name="description" content="Police officer overview and live Evansville police headlines rendered inline.">
+  <link rel="canonical" href="https://www.marcschiele.com/police-officer.html">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .section { margin: 28px 0; }
+    .news-list { list-style: none; padding: 0; }
+    .news-list li { margin: 0 0 12px; }
+    .news-meta { color: #666; font-size: 0.9em; }
+    .muted { color: #666; }
+    .updated-at { font-size: 0.9em; color:#666; }
+    .errorbox { background:#fff3f3; border:1px solid #f0c2c2; padding:10px; border-radius:8px; margin:10px 0; }
+    .count { font-size:.9em; color:#666; }
+    .pill { display:inline-block; padding:2px 8px; border:1px solid #ddd; border-radius:999px; font-size:.85em; margin-left:8px; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/">Home</a>
+  <a href="/about.html">About</a>
+  <a href="/evansville.html">Evansville</a>
+  <a href="/firefighter.html">Firefighter</a>
+  <a href="/police-officer.html">Police Officer</a>
+  <a href="/contact.html">Contact</a>
+</nav>
+<main>
+  <h1>Police Officer</h1>
+
+  <section class="section">
+    <p>
+      A <strong>police officer</strong> safeguards people and property by preventing crime, responding to emergencies, and enforcing laws with fairness and restraint. The modern role is broader than traditional patrol: officers are also problem‑solvers, first responders, investigators, and community partners. Daily work spans calls for service, proactive patrol, crash response, crisis intervention, arrest processing, report writing, and courtroom testimony. Officers switch contexts quickly—one call may b...
+    </p>
+    <p>
+      Effective policing blends presence, discretion, and communication. Visibility can deter crime, but durable safety comes from relationships—knowing neighborhoods, businesses, and repeat locations. Officers practice <em>procedural justice</em>: explain, listen, treat people with dignity, and make decisions impartially. That approach improves legitimacy and cooperation, which boosts case clearance and reduces use‑of‑force risk. When force is unavoidable, policy and training emphasize necessity and propor...
+    </p>
+    <p>
+      Training is continuous. Recruits complete academy curricula in criminal law, search and seizure, defensive tactics, firearms, EVOC (emergency vehicle operations), first aid/CPR, and crisis communication. Field training pairs new officers with FTOs to apply policy on real calls. Ongoing in‑service covers crisis intervention (CIT), de‑escalation, less‑lethal options, digital evidence, and evolving case law. Specialized tracks include investigations, K‑9, motors, traffic reconstruction, SWAT, communit...
+    </p>
+    <p>
+      Technology reshapes the job. CAD and RMS systems organize calls and reports; body‑worn cameras and in‑car video document encounters; ALPR helps identify wanted vehicles; drones assist with crash mapping and search. Data analysis can focus patrols on emerging problems, but numbers never replace on‑scene judgment. Documentation quality matters—clear narratives, accurate elements of the offense, and correctly packaged evidence strengthen cases and draw a clear public record.
+    </p>
+    <p>
+      Becoming a <strong>police officer</strong> typically requires a clean background, psychological screening, medical and fitness standards, and graduation from an accredited academy. Agencies value integrity, calm under pressure, strong writing, and the ability to communicate across cultures. Supervisory roles (corporal, sergeant, lieutenant, captain) add leadership, coaching, risk management, budgeting, and interagency coordination. The best agencies pair accountability with support—good equipment, ...
+    </p>
+    <p class="muted">Updated 2025-08-22. Original text for this site; “police officer” appears deliberately for search clarity and user intent.</p>
+  </section>
+
+  <section class="section" id="local-news">
+    <h2>Latest Evansville Police Headlines <span id="mode" class="pill">checking…</span></h2>
+    <div id="errors" class="errorbox" style="display:none"></div>
+    <p class="updated-at" id="news-updated">Loading headlines…</p>
+    <div class="count" id="count"></div>
+    <ul class="news-list" id="news-list"></ul>
+    <noscript><p>Enable JavaScript to see live headlines.</p></noscript>
+  </section>
+</main>
+<footer>© 2025 Marc Schiele · <a href="/sitemap.xml">Sitemap</a></footer>
+
+<script>
+const LIST = document.getElementById("news-list");
+const UPDATED = document.getElementById("news-updated");
+const ERRBOX = document.getElementById("errors");
+const COUNT = document.getElementById("count");
+const MODE = document.getElementById("mode");
+
+function showError(msg) { 
+  ERRBOX.style.display = 'block';
+  ERRBOX.textContent = msg;
+}
+
+function timeAgo(dateStr) { 
+  const t = new Date(dateStr);
+  const s = Math.floor((Date.now() - t.getTime()) / 1000);
+  const m = Math.floor(s/60), h = Math.floor(m/60), d = Math.floor(h/24);
+  if (d>0) return d + "d ago";
+  if (h>0) return h + "h ago";
+  if (m>0) return m + "m ago";
+  return "just now";
+}
+
+// Evansville-focused Google News RSS queries
+const FEEDS = [
+  "https://news.google.com/rss/search?q=evansville%20police%20officer&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=%22Evansville%22%20%22police%20officer%22&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=%22Evansville%20Police%20Department%22%20OR%20EPD&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3A14news.com%20%28Evansville%20police%20OR%20EPD%20OR%20%22police%20officer%22%29&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Atristatehomepage.com%20%28Evansville%20police%20OR%20EPD%20OR%20%22police%20officer%22%29&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Acourierpress.com%20%28Evansville%20police%20OR%20EPD%20OR%20%22police%20officer%22%29&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Athegleaner.com%20%28Evansville%20police%20OR%20EPD%20OR%20%22police%20officer%22%29&hl=en-US&gl=US&ceid=US:en"
+];
+
+function unwrapGoogleLink(href) {
+  try { 
+    const u = new URL(href);
+    const direct = u.searchParams.get('url');
+    return direct ? decodeURIComponent(direct) : href;
+  } catch(e) { return href; }
+}
+
+function parseXmlItems(xmlText) {
+  const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+  const items = Array.from(doc.querySelectorAll('item'));
+  return items.map(it => ({ 
+    title: (it.querySelector('title') && it.querySelector('title').textContent) || '',
+    link: unwrapGoogleLink((it.querySelector('link') && it.querySelector('link').textContent) || ''),
+    pubDate: (it.querySelector('pubDate') && it.querySelector('pubDate').textContent) || '',
+    source: (it.querySelector('source') && it.querySelector('source').textContent) || ''
+  }));
+}
+
+async function tryServerFunction() {
+  try {
+    const res = await fetch('/.netlify/functions/evv-police-rss', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data || !Array.isArray(data.items)) throw new Error('Bad JSON');
+    MODE.textContent = "server";
+    return data.items;
+  } catch (e) {
+    console.warn('Server function unavailable:', e);
+    MODE.textContent = "client fallback";
+    return null;
+  }
+}
+
+async function clientFallback() {
+  const gateways = [
+    (url) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+    (url) => "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url),
+  ];
+  const seen = new Set();
+  const items = [];
+  let totalFailures = 0;
+
+  async function fetchViaGateways(url) {
+    try {
+      const res = await fetch(gateways[0](url), { cache: 'no-store' });
+      if (res.ok) {
+        const text = await res.text();
+        const arr = parseXmlItems(text);
+        if (arr.length) return arr;
+      }
+    } catch(e) { /* ignore */ }
+    try {
+      const res = await fetch(gateways[1](url), { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        const arr = (data.items || []).map(it => ({ 
+          title: it.title, link: unwrapGoogleLink(it.link || ''),
+          pubDate: it.pubDate || '', source: it.author || it.feedTitle || ''
+        }));
+        if (arr.length) return arr;
+      }
+    } catch(e) { /* ignore */ }
+    totalFailures += 1;
+    return [];
+  }
+
+  for (const f of FEEDS) {
+    const arr = await fetchViaGateways(f);
+    arr.slice(0, 40).forEach(it => {
+      const key = (it.link || '') + '|' + (it.title || '');
+      if (!seen.has(key)) {
+        seen.add(key);
+        items.push(it);
+      }
+    });
+  }
+  if (totalFailures === FEEDS.length) {
+    showError("All client gateways were blocked or rate-limited. Try again in a minute.");
+  }
+  return items;
+}
+
+function render(items, cap=150) {
+  LIST.innerHTML = "";
+  const sorted = items.slice().sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
+  const top = sorted.slice(0, cap);
+  top.forEach(it => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = it.link;
+    a.target = "_blank";
+    a.rel = "noopener nofollow";
+    a.textContent = (it.title || "").replace(/\s+/g,' ').trim();
+    const meta = document.createElement("div");
+    meta.className = "news-meta";
+    const host = (() => { try { return new URL(it.link).host.replace('www.',''); } catch(e) { return ''; } })();
+    const when = it.pubDate ? timeAgo(it.pubDate) : "";
+    const src = it.source || host;
+    meta.textContent = (src || host) + (when ? " · " + when : "");
+    li.appendChild(a);
+    li.appendChild(meta);
+    LIST.appendChild(li);
+  });
+  UPDATED.textContent = "Updated " + new Date().toLocaleString();
+  COUNT.textContent = "Showing " + top.length + " of " + items.length + " headlines";
+}
+
+async function loadNews() {
+  ERRBOX.style.display = 'none';
+  ERRBOX.textContent = '';
+  UPDATED.textContent = "Refreshing…";
+  COUNT.textContent = "";
+  LIST.innerHTML = "";
+
+  let items = await tryServerFunction();
+  if (!items) {
+    items = await clientFallback();
+  }
+  if (!items || !items.length) {
+    UPDATED.textContent = "No headlines found.";
+    return;
+  }
+  render(items, 150);
+}
+
+loadNews();
+setInterval(loadNews, 60*60*1000);
+</script>
+</body>
+</html>
