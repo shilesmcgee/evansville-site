@@ -1,60 +1,76 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Firefighter — Marc Schiele</title>
-  <meta name="description" content="Firefighter overview and live Evansville headlines." />
-  <link rel="canonical" href="https://www.marcschiele.com/firefighter.html" />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="description" content="Firefighter overview and live Evansville firefighter headlines rendered inline.">
+  <link rel="canonical" href="https://www.marcschiele.com/firefighter.html">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .section { margin: 28px 0; }
+    .news-list { list-style: none; padding: 0; }
+    .news-list li { margin: 0 0 12px; }
+    .news-meta { color: #666; font-size: 0.9em; }
+    .muted { color: #666; }
+    .updated-at { font-size: 0.9em; color:#666; }
+  </style>
 </head>
 <body>
-<nav class="container" style="padding-top:16px;">
+<nav>
   <a href="/">Home</a>
-  <a href="/evansville.html">Evansville</a>
+  <a href="/about.html">About</a>
+    <a href="/evansville.html">Evansville</a>
   <a href="/firefighter.html">Firefighter</a>
   <a href="/police-officer.html">Police Officer</a>
-  <a href="/about">About</a>
   <a href="/contact.html">Contact</a>
 </nav>
-
-<main class="container">
+<main>
   <h1>Firefighter</h1>
 
   <section class="section">
-    
-<p>A <strong>firefighter</strong> protects life, property, and the environment by responding to fires, medical calls, rescues, and hazardous incidents. Preparation, teamwork, and training make the difference when seconds matter.</p>
-
-    <p style="color:#666;font-size:.95em">Updated 2025-08-23</p>
+    <p>
+      A <strong>firefighter</strong> protects life, property, and the environment by responding to fires, medical emergencies, technical rescues, hazardous materials incidents, and severe-weather impacts. The work blends prevention, preparation, and decisive operations under pressure. Modern firefighters are trained for all‑hazards response: structure fire attack and ventilation, wildland‑urban interface, emergency medical care, vehicle extrication, rope and confined‑space rescue, water rescue, and hazmat isolation.
+    </p>
+    <p>
+      Daily operations extend well beyond suppression. A typical shift cycles through apparatus checks, tool maintenance, pre‑incident planning, and company drills to keep core competencies sharp. Fire prevention is a primary mission: <strong>firefighter</strong>‑led school visits, smoke‑alarm installation campaigns, and code‑enforcement support lower risk before alarms ever ring. In many communities, personnel work as firefighter/EMTs or firefighter/paramedics, delivering the majority of 9‑1‑1 medical care.
+    </p>
+    <p>
+      Tactics evolve with evidence. Thermal imaging improves search; transitional and coordinated attack refine timing; data‑informed decision models shape when to commit to interior operations. PPE and SCBA technology advance, but heat, toxic gases, and collapse hazards remain unforgiving. Post‑incident decontamination, clean‑cab policies, and cancer‑prevention protocols are now standard in progressive departments, acknowledging long‑term health risks from repeated smoke and contaminant exposure.
+    </p>
+    <p>
+      Becoming a <strong>firefighter</strong> typically requires CPAT (or equivalent physical ability), accredited Firefighter I/II training, EMS licensure, and a solid background. Competitive agencies value military service, advanced rescue credentials, bilingual ability, and community involvement. Promotion into driver/operator, lieutenant, captain, or chief adds leadership development, incident command, training oversight, budgeting, and policy work alongside operations.
+    </p>
+    <p class="muted">Updated 2025-08-21. Original text written for this site; “firefighter” is used deliberately for search clarity.</p>
   </section>
 
   <section class="section" id="local-news">
-    <h2>Latest Evansville Headlines <span id="mode" class="pill">checking…</span></h2>
-    <div id="errors" class="errorbox" style="display:none"></div>
+    <h2>Latest Evansville Firefighter Headlines</h2>
     <p class="updated-at" id="news-updated">Loading headlines…</p>
-    <div class="count" id="count"></div>
     <ul class="news-list" id="news-list"></ul>
     <noscript><p>Enable JavaScript to see live headlines.</p></noscript>
   </section>
 </main>
-
-<footer>
-  <div class="container">© 2025 Marc Schiele · <a href="/sitemap.xml">Sitemap</a></div>
-</footer>
+<footer>© 2025 Marc Schiele · <a href="/sitemap.xml">Sitemap</a></footer>
 
 <script>
+// Mirrors the Evansville page behavior: aggregate multiple Google News RSS queries.
+// Uses a lightweight RSS-to-JSON gateway. Auto-refreshes hourly.
+const FEEDS = [
+  "https://news.google.com/rss/search?q=evansville%20firefighter&hl=en-US&gl=US&ceid=US:en",
+  ""https://news.google.com/rss/search?q=%22evansville%22%20%22firefighter%22&hl=en-US&gl=US&ceid=US:en"",
+  "https://news.google.com/rss/search?q=site%3Acourierpress.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3A14news.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Atristatehomepage.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Athegleaner.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Aevansvilleliving.com%20firefighter&hl=en-US&gl=US&ceid=US:en"
+];
+
+const GATEWAY = "https://api.rss2json.com/v1/api.json?rss_url=";
 const LIST = document.getElementById("news-list");
 const UPDATED = document.getElementById("news-updated");
-const ERRBOX = document.getElementById("errors");
-const COUNT = document.getElementById("count");
-const MODE = document.getElementById("mode");
 
-function showError(msg) {
-  ERRBOX.style.display = 'block';
-  ERRBOX.textContent = msg;
-}
-
-function timeAgo(dateStr) {
+function timeAgo(dateStr) { 
   const t = new Date(dateStr);
   const s = Math.floor((Date.now() - t.getTime()) / 1000);
   const m = Math.floor(s/60), h = Math.floor(m/60), d = Math.floor(h/24);
@@ -64,98 +80,33 @@ function timeAgo(dateStr) {
   return "just now";
 }
 
-const FEEDS = [
-      "https://news.google.com/rss/search?q=evansville%20firefighter&hl=en-US&gl=US&ceid=US:en",
-      "https://news.google.com/rss/search?q=%22evansville%22%20%22firefighter%22&hl=en-US&gl=US&ceid=US:en"
-    ];
-
-function unwrapGoogleLink(href) {
-  try {
-    const u = new URL(href);
-    const direct = u.searchParams.get('url');
-    return direct ? decodeURIComponent(direct) : href;
-  } catch(e) { return href; }
+async function fetchFeed(url){
+  const res = await fetch(GATEWAY + encodeURIComponent(url));
+  if(!res.ok) throw new Error("Feed error");
+  return res.json();
 }
 
-function parseXmlItems(xmlText) {
-  const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
-  const items = Array.from(doc.querySelectorAll('item'));
-  return items.map(it => ({
-    title: (it.querySelector('title') && it.querySelector('title').textContent) || '',
-    link: unwrapGoogleLink((it.querySelector('link') && it.querySelector('link').textContent) || ''),
-    pubDate: (it.querySelector('pubDate') && it.querySelector('pubDate').textContent) || '',
-    source: (it.querySelector('source') && it.querySelector('source').textContent) || ''
-  }));
-}
-
-async function tryServerFunction() {
-  try {
-    const res = await fetch('/.netlify/functions/evv-firefighter-rss', { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (!data || !Array.isArray(data.items)) throw new Error('Bad JSON');
-    MODE.textContent = "server";
-    return data.items;
-  } catch (e) {
-    console.warn('Server function unavailable:', e);
-    MODE.textContent = "client fallback";
-    return null;
-  }
-}
-
-async function clientFallback() {
-  const gateways = [
-    (url) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
-    (url) => "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url),
-  ];
+async function loadNews(){
+  LIST.innerHTML = "";
+  UPDATED.textContent = "Refreshing…";
   const seen = new Set();
   const items = [];
-  let totalFailures = 0;
-
-  async function fetchViaGateways(url) {
+  for (const f of FEEDS){
     try {
-      const res = await fetch(gateways[0](url), { cache: 'no-store' });
-      if (res.ok) {
-        const text = await res.text();
-        const arr = parseXmlItems(text);
-        if (arr.length) return arr;
-      }
-    } catch(e) { }
-    try {
-      const res = await fetch(gateways[1](url), { cache: 'no-store' });
-      if (res.ok) {
-        const data = await res.json();
-        const arr = (data.items || []).map(it => ({
-          title: it.title, link: unwrapGoogleLink(it.link || ''),
-          pubDate: it.pubDate || '', source: it.author || it.feedTitle || ''
-        }));
-        if (arr.length) return arr;
-      }
-    } catch(e) { }
-    totalFailures += 1;
-    return [];
+      const data = await fetchFeed(f);
+      (data.items || []).slice(0, 12).forEach(it => {
+        const key = it.link || it.guid || it.title;
+        if (!seen.has(key)){
+          seen.add(key);
+          items.push(it);
+        }
+      });
+    } catch(e){
+      console.warn("Feed failed", f, e);
+    }
   }
-
-  for (const f of FEEDS) {
-    const arr = await fetchViaGateways(f);
-    arr.slice(0, 40).forEach(it => {
-      const key = (it.link || '') + '|' + (it.title || '');
-      if (!seen.has(key)) {
-        seen.add(key);
-        items.push(it);
-      }
-    });
-  }
-  if (totalFailures === FEEDS.length) {
-    showError("All client gateways were blocked or rate-limited. Try again later.");
-  }
-  return items;
-}
-
-function render(items, cap=150) {
-  LIST.innerHTML = "";
-  const sorted = items.slice().sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
-  const top = sorted.slice(0, cap);
+  items.sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
+  const top = items.slice(0, 30);
   top.forEach(it => {
     const li = document.createElement("li");
     const a = document.createElement("a");
@@ -165,34 +116,14 @@ function render(items, cap=150) {
     a.textContent = (it.title || "").replace(/\s+/g,' ').trim();
     const meta = document.createElement("div");
     meta.className = "news-meta";
-    const host = (() => { try { return new URL(it.link).host.replace('www.',''); } catch(e) { return ''; } })();
+    const source = (it.author || it.feedTitle || (it.link||'').split('/')[2] || '').replace('www.','');
     const when = it.pubDate ? timeAgo(it.pubDate) : "";
-    const src = it.source || host;
-    meta.textContent = (src || host) + (when ? " · " + when : "");
+    meta.textContent = source + (when ? " · " + when : "");
     li.appendChild(a);
     li.appendChild(meta);
     LIST.appendChild(li);
   });
   UPDATED.textContent = "Updated " + new Date().toLocaleString();
-  COUNT.textContent = "Showing " + top.length + " of " + items.length + " headlines";
-}
-
-async function loadNews() {
-  ERRBOX.style.display = 'none';
-  ERRBOX.textContent = '';
-  UPDATED.textContent = "Refreshing…";
-  COUNT.textContent = "";
-  LIST.innerHTML = "";
-
-  let items = await tryServerFunction();
-  if (!items) {
-    items = await clientFallback();
-  }
-  if (!items || !items.length) {
-    UPDATED.textContent = "No headlines found.";
-    return;
-  }
-  render(items, 150);
 }
 
 loadNews();
