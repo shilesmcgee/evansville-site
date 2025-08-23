@@ -2,43 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.marcschiele.com/</loc>
-    <lastmod>2025-08-23</lastmod>
+    <lastmod>2025-08-22</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.marcschiele.com/about.html</loc>
+    <lastmod>2025-08-22</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.marcschiele.com/evansville.html</loc>
-    <lastmod>2025-08-23</lastmod>
+    <lastmod>2025-08-22</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.marcschiele.com/firefighter.html</loc>
-    <lastmod>2025-08-23</lastmod>
+    <lastmod>2025-08-22</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.marcschiele.com/police-officer.html</loc>
-    <lastmod>2025-08-23</lastmod>
+    <lastmod>2025-08-22</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.marcschiele.com/about</loc>
-    <lastmod>2025-08-23</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.marcschiele.com/about.html</loc>
-    <lastmod>2025-08-23</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://www.marcschiele.com/contact.html</loc>
-    <lastmod>2025-08-23</lastmod>
+    <lastmod>2025-08-22</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
