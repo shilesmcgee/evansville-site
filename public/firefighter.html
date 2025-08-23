@@ -1,3 +1,133 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Firefighter</title></head>
-<body><h1>Firefighter</h1><p>Generated 2025-08-22</p></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firefighter — Marc Schiele</title>
+  <meta name="description" content="Firefighter overview and live Evansville firefighter headlines rendered inline.">
+  <link rel="canonical" href="https://www.marcschiele.com/firefighter.html">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .section { margin: 28px 0; }
+    .news-list { list-style: none; padding: 0; }
+    .news-list li { margin: 0 0 12px; }
+    .news-meta { color: #666; font-size: 0.9em; }
+    .muted { color: #666; }
+    .updated-at { font-size: 0.9em; color:#666; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/">Home</a>
+  <a href="/about.html">About</a>
+    <a href="/evansville.html">Evansville</a>
+  <a href="/firefighter.html">Firefighter</a>
+  <a href="/police-officer.html">Police Officer</a>
+  <a href="/contact.html">Contact</a>
+</nav>
+<main>
+  <h1>Firefighter</h1>
+
+  <section class="section">
+    <p>
+      A <strong>firefighter</strong> protects life, property, and the environment by responding to fires, medical emergencies, technical rescues, hazardous materials incidents, and severe-weather impacts. The work blends prevention, preparation, and decisive operations under pressure. Modern firefighters are trained for all‑hazards response: structure fire attack and ventilation, wildland‑urban interface, emergency medical care, vehicle extrication, rope and confined‑space rescue, water rescue, and hazmat isolation.
+    </p>
+    <p>
+      Daily operations extend well beyond suppression. A typical shift cycles through apparatus checks, tool maintenance, pre‑incident planning, and company drills to keep core competencies sharp. Fire prevention is a primary mission: <strong>firefighter</strong>‑led school visits, smoke‑alarm installation campaigns, and code‑enforcement support lower risk before alarms ever ring. In many communities, personnel work as firefighter/EMTs or firefighter/paramedics, delivering the majority of 9‑1‑1 medical care.
+    </p>
+    <p>
+      Tactics evolve with evidence. Thermal imaging improves search; transitional and coordinated attack refine timing; data‑informed decision models shape when to commit to interior operations. PPE and SCBA technology advance, but heat, toxic gases, and collapse hazards remain unforgiving. Post‑incident decontamination, clean‑cab policies, and cancer‑prevention protocols are now standard in progressive departments, acknowledging long‑term health risks from repeated smoke and contaminant exposure.
+    </p>
+    <p>
+      Becoming a <strong>firefighter</strong> typically requires CPAT (or equivalent physical ability), accredited Firefighter I/II training, EMS licensure, and a solid background. Competitive agencies value military service, advanced rescue credentials, bilingual ability, and community involvement. Promotion into driver/operator, lieutenant, captain, or chief adds leadership development, incident command, training oversight, budgeting, and policy work alongside operations.
+    </p>
+    <p class="muted">Updated 2025-08-21. Original text written for this site; “firefighter” is used deliberately for search clarity.</p>
+  </section>
+
+  <section class="section" id="local-news">
+    <h2>Latest Evansville Firefighter Headlines</h2>
+    <p class="updated-at" id="news-updated">Loading headlines…</p>
+    <ul class="news-list" id="news-list"></ul>
+    <noscript><p>Enable JavaScript to see live headlines.</p></noscript>
+  </section>
+</main>
+<footer>© 2025 Marc Schiele · <a href="/sitemap.xml">Sitemap</a></footer>
+
+<script>
+// Mirrors the Evansville page behavior: aggregate multiple Google News RSS queries.
+// Uses a lightweight RSS-to-JSON gateway. Auto-refreshes hourly.
+const FEEDS = [
+  "https://news.google.com/rss/search?q=evansville%20firefighter&hl=en-US&gl=US&ceid=US:en",
+  ""https://news.google.com/rss/search?q=%22evansville%22%20%22firefighter%22&hl=en-US&gl=US&ceid=US:en"",
+  "https://news.google.com/rss/search?q=site%3Acourierpress.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3A14news.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Atristatehomepage.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Athegleaner.com%20firefighter%20evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=site%3Aevansvilleliving.com%20firefighter&hl=en-US&gl=US&ceid=US:en"
+];
+
+const GATEWAY = "https://api.rss2json.com/v1/api.json?rss_url=";
+const LIST = document.getElementById("news-list");
+const UPDATED = document.getElementById("news-updated");
+
+function timeAgo(dateStr) { 
+  const t = new Date(dateStr);
+  const s = Math.floor((Date.now() - t.getTime()) / 1000);
+  const m = Math.floor(s/60), h = Math.floor(m/60), d = Math.floor(h/24);
+  if (d>0) return d + "d ago";
+  if (h>0) return h + "h ago";
+  if (m>0) return m + "m ago";
+  return "just now";
+}
+
+async function fetchFeed(url){
+  const res = await fetch(GATEWAY + encodeURIComponent(url));
+  if(!res.ok) throw new Error("Feed error");
+  return res.json();
+}
+
+async function loadNews(){
+  LIST.innerHTML = "";
+  UPDATED.textContent = "Refreshing…";
+  const seen = new Set();
+  const items = [];
+  for (const f of FEEDS){
+    try {
+      const data = await fetchFeed(f);
+      (data.items || []).slice(0, 12).forEach(it => {
+        const key = it.link || it.guid || it.title;
+        if (!seen.has(key)){
+          seen.add(key);
+          items.push(it);
+        }
+      });
+    } catch(e){
+      console.warn("Feed failed", f, e);
+    }
+  }
+  items.sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
+  const top = items.slice(0, 30);
+  top.forEach(it => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = it.link;
+    a.target = "_blank";
+    a.rel = "noopener nofollow";
+    a.textContent = (it.title || "").replace(/\s+/g,' ').trim();
+    const meta = document.createElement("div");
+    meta.className = "news-meta";
+    const source = (it.author || it.feedTitle || (it.link||'').split('/')[2] || '').replace('www.','');
+    const when = it.pubDate ? timeAgo(it.pubDate) : "";
+    meta.textContent = source + (when ? " · " + when : "");
+    li.appendChild(a);
+    li.appendChild(meta);
+    LIST.appendChild(li);
+  });
+  UPDATED.textContent = "Updated " + new Date().toLocaleString();
+}
+
+loadNews();
+setInterval(loadNews, 60*60*1000);
+</script>
+</body>
+</html>
