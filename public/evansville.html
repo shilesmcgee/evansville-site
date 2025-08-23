@@ -1,21 +1,140 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Evansville — Marc Schiele</title>
-<link rel="stylesheet" href="/style.css" />
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evansville — Marc Schiele</title>
+  <meta name="description" content="Evansville overview, history, economy, culture, and live local news links.">
+  <link rel="canonical" href="https://www.marcschiele.com/evansville.html">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .news-list { list-style: none; padding: 0; }
+    .news-list li { margin: 0 0 12px; }
+    .news-item a { text-decoration: none; }
+    .news-meta { color: #666; font-size: 0.9em; }
+    .muted { color: #666; }
+    .section { margin: 28px 0; }
+    .updated-at { font-size: 0.9em; color:#666; }
+  </style>
 </head>
 <body>
-<nav class="container" style="padding-top:16px;">
+<nav>
   <a href="/">Home</a>
-  <a href="/evansville.html">Evansville</a>
+  <a href="/about.html">About</a>
+    <a href="/evansville.html">Evansville</a>
   <a href="/firefighter.html">Firefighter</a>
   <a href="/police-officer.html">Police Officer</a>
-  <a href="/about">About</a>
   <a href="/contact.html">Contact</a>
 </nav>
-<main class="container">
+<main>
   <h1>Evansville</h1>
-  <p class="section">Local resources, live headlines, and context about Evansville. Updated 2025-08-23.</p>
+
+  <section class="section">
+    <p>
+      Evansville is the principal city of southwestern Indiana and a regional hub for the tri‑state area of Indiana, Kentucky, and Illinois. The city sits on a sweeping bend of the Ohio River and serves as the seat of Vanderburgh County. Its growth traces the river: early settlement and trade followed the waterway, and later waves of industry, logistics, and healthcare anchored its modern economy. The city’s layout reflects this history—an older urban core along the riverfront, outlying neighborhoods that expanded with streetcars and highways, and newer commercial corridors on the east side.
+    </p>
+    <p>
+      The area’s recorded history spans far beyond the city’s founding. To the east, the Angel Mounds State Historic Site preserves one of the most significant Mississippian culture towns in the Ohio Valley, active centuries before European settlement. Evansville itself took shape in the early nineteenth century; it was formally platted after the War of 1812 and named for Robert Morgan Evans. River commerce, then rail, sustained the young town. During the twentieth century, wartime manufacturing and later diversified industry accelerated growth. While heavy industry has contracted and modernized over the decades, the city retained a strong base in advanced manufacturing, energy, plastics, and distribution—helped by easy access to river, highway, rail, and regional air service.
+    </p>
+    <p>
+      Today health systems, education, and services are central employers. Deaconess Health System and Ascension St. Vincent operate major hospitals and clinics that draw patients from the broader tri‑state. Higher education adds depth and stability: the University of Evansville maintains a historic campus near Lincoln Avenue and a well‑regarded performing arts program, while the University of Southern Indiana, west of town, has grown into a comprehensive public university with strong nursing and business programs. Ivy Tech adds workforce training, and collaborative programs tie local schools to industry needs.
+    </p>
+    <p>
+      Evansville’s cultural footprint is larger than its footprint on the map. The Evansville Museum of Arts, History & Science anchors the riverfront with rotating exhibitions and a planetarium; the Children’s Museum of Evansville sits a few blocks north in a rehabilitated Art Deco landmark. Mesker Park Zoo & Botanical Garden, one of the state’s oldest, sprawls along the city’s west side. Live performance and sports rotate between the historic Victory Theatre and the Ford Center arena downtown. Baseball has long roots here: Bosse Field—opened in 1915—remains among the oldest professional ballparks still in regular use in the United States.
+    </p>
+    <p>
+      Neighborhood identities are distinct. Downtown has been steadily reinvesting around Main Street, the Civic Center, and the riverfront trail system. Haynie’s Corner Arts District, just southeast of downtown, mixes galleries, restaurants, and late‑nineteenth‑century residential blocks. The west side keeps a close‑knit feel around Franklin Street, capped each fall by the West Side Nut Club Fall Festival—one of the largest street festivals in the Midwest. On the east side, retail and commercial nodes line the Lloyd Expressway and Green River Road corridors, with residential areas extending beyond.
+    </p>
+    <p>
+      The city’s transportation network connects it outward and inward. U.S. 41 and the Lloyd Expressway move cross‑town traffic; the I‑69 corridor links the metro north toward Bloomington and Indianapolis and south toward Kentucky. Evansville Regional Airport offers direct flights to larger hubs, and the river port continues to handle bulk commodities tied to the region’s manufacturing and agricultural economy. A ring of smaller communities—Newburgh, Chandler, Darmstadt, and Henderson, Kentucky—interact with Evansville daily for work, healthcare, and commerce.
+    </p>
+    <p>
+      Climate is humid subtropical by Midwestern standards: hot, humid summers; cool to mild winters; and four true seasons that shape outdoor events and river levels. The Ohio River is both a scenic asset and an environmental factor the city plans around. Parks, greenways, and levee improvements frame much of the modern riverfront, while ongoing redevelopment pushes more housing and public space toward the water.
+    </p>
+    <p>
+      In short, Evansville functions as a practical capital for the lower Ohio Valley: a place where river trade, industry, education, and healthcare converge. Its institutions are sized for a region bigger than the city’s boundaries, and that scale shows in the cultural calendar, hospital systems, and universities. For residents, the advantages are straightforward—short commutes, big‑city amenities in a compact package, and a civic culture that still revolves around neighborhoods, schools, and Friday‑night games.
+    </p>
+    <p class="muted">Last updated: 2025-08-21. This overview is an original summary written for this site based on widely known public facts, with wording distinct from Wikipedia.</p>
+  </section>
+
+  <section class="section" id="local-news">
+    <h2>Latest Local News</h2>
+    <p class="updated-at" id="news-updated">Loading headlines…</p>
+    <ul class="news-list" id="news-list"></ul>
+    <noscript><p>Enable JavaScript to see live headlines.</p></noscript>
+  </section>
 </main>
-<footer><div class="container">© 2025 Marc Schiele · <a href="/sitemap.xml">Sitemap</a></div></footer>
-</body></html>
+<footer>© 2025 Marc Schiele · <a href="/sitemap.xml">Sitemap</a></footer>
+
+<script>
+const FEEDS = [
+  "https://news.google.com/rss/search?q=Evansville%20Indiana&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=Evansville%20courier%20and%20press&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=WFIE%2014%20News%20Evansville&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=WEHT%20WTVW%20Evansville&hl=en-US&gl=US&ceid=US:en"
+];
+const GATEWAY = "https://api.rss2json.com/v1/api.json?rss_url=";
+const LIST = document.getElementById("news-list");
+const UPDATED = document.getElementById("news-updated");
+
+function timeAgo(dateStr) { 
+  const t = new Date(dateStr);
+  const s = Math.floor((Date.now() - t.getTime()) / 1000);
+  const m = Math.floor(s/60), h = Math.floor(m/60), d = Math.floor(h/24);
+  if (d>0) return d + "d ago";
+  if (h>0) return h + "h ago";
+  if (m>0) return m + "m ago";
+  return "just now";
+}
+
+async function fetchFeed(url){
+  const res = await fetch(GATEWAY + encodeURIComponent(url));
+  if(!res.ok) throw new Error("Feed error");
+  return res.json();
+}
+
+async function loadNews(){
+  LIST.innerHTML = "";
+  UPDATED.textContent = "Refreshing…";
+  const seen = new Set();
+  const items = [];
+  for (const f of FEEDS){
+    try {
+      const data = await fetchFeed(f);
+      (data.items || []).slice(0, 8).forEach(it => {
+        const key = it.link || it.guid || it.title;
+        if (!seen.has(key)){
+          seen.add(key);
+          items.push(it);
+        }
+      });
+    } catch(e){
+      console.warn("Feed failed", f, e);
+    }
+  }
+  items.sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
+  const top = items.slice(0, 12);
+  top.forEach(it => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = it.link;
+    a.target = "_blank";
+    a.rel = "noopener nofollow";
+    a.textContent = (it.title || "").replace(/\s+/g,' ').trim();
+    const meta = document.createElement("div");
+    meta.className = "news-meta";
+    const source = (it.author || it.feedTitle || (it.link||'').split('/')[2] || '').replace('www.','');
+    const when = it.pubDate ? timeAgo(it.pubDate) : "";
+    meta.textContent = source + (when ? " · " + when : "");
+    li.appendChild(a);
+    li.appendChild(meta);
+    LIST.appendChild(li);
+  });
+  UPDATED.textContent = "Updated " + new Date().toLocaleString();
+}
+
+loadNews();
+setInterval(loadNews, 60*60*1000);
+</script>
+</body>
+</html>
